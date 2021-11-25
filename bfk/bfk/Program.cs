@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,9 +13,10 @@ namespace bfk
         private static string path;
         static void Main(string[] args)
         {
-           path = Directory.GetCurrentDirectory();
-           string[] directories = Directory.GetDirectories(path);            
-           string[] files = Directory.GetFiles(path);
+            path = Directory.GetCurrentDirectory();
+            string[] directories = Directory.GetDirectories(path);
+            List<string> directoriesJustNames = DirectoryInfos.directoryNames(directories);
+            string[] files = Directory.GetFiles(path);
 
            if(args.Length < 1)
             {
