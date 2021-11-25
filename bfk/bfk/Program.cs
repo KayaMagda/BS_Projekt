@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 
@@ -12,7 +13,7 @@ namespace bfk
         static void Main(string[] args)
         {
            path = Directory.GetCurrentDirectory();
-           string[] directories = Directory.GetDirectories(path);
+           string[] directories = Directory.GetDirectories(path);            
            string[] files = Directory.GetFiles(path);
 
            if(args.Length < 1)
@@ -49,6 +50,10 @@ namespace bfk
                 case "/filelist":
                     {if (args.Length == 1)
                         {
+                            foreach(string file in files)
+                            {
+                                Console.WriteLine(Path.GetFileName(file));
+                            }
 
                         }else
                         {
