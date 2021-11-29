@@ -1,0 +1,11 @@
+C:\Users\90956\source\repos\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.exe
+C:\Users\90956\source\repos\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.deps.json
+C:\Users\90956\source\repos\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.runtimeconfig.json
+C:\Users\90956\source\repos\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.runtimeconfig.dev.json
+C:\Users\90956\source\repos\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.dll
+C:\Users\90956\source\repos\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.pdb
+C:\Users\90956\source\repos\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.csprojAssemblyReference.cache
+C:\Users\90956\source\repos\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.AssemblyInfoInputs.cache
+C:\Users\90956\source\repos\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.AssemblyInfo.cs
+C:\Users\90956\source\repos\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.dll
+C:\Users\90956\source\repos\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.pdb
