@@ -384,12 +384,40 @@ namespace bfk
                         if (ArgsWalker.argsWalker(1, args) == "text")
                         {
                             string start = ArgsWalker.argsWalker(2, args);
+                            foreach(string file in files)
+                            {
+                                string oldName = Path.GetFileName(file);
+                                string newName = start + oldName;
+                                File.Copy(oldName, newName);
+                                File.Delete(oldName);
+                            }
                         }
                         else if (ArgsWalker.argsWalker(1, args) == "num")
                         {
                             int allFiles = files.Length;
                             int needZeros = allFiles.ToString().Length;
                             int start = int.Parse(ArgsWalker.argsWalker(2, args));
+                            List<string> numbers = new List<string>();
+
+                            for(int i = start; i < allFiles+start; i++)
+                            {
+                                string asString = i.ToString();
+                                while (asString.Length < needZeros)
+                                {
+                                    asString = "0" + asString;
+                                }
+                                numbers.Add(asString);
+
+                            }
+                            for(int i = 0; i < numbers.Count; i++)
+                            {
+                                string oldName = Path.GetFileName(files[i]);
+                                string newName = numbers[i] + files[i];
+                                File.Copy(oldName, newName);
+                                File.Delete(oldName);
+                            }
+                            
+
 
                         }
                         else
@@ -411,6 +439,20 @@ namespace bfk
                             string dateiName = ArgsWalker.argsWalker(1, args);
                             string toBeReplaced = ArgsWalker.argsWalker(2, args);
                             string replaceWith = ArgsWalker.argsWalker(3, args);
+                            string fileContent = "";
+                            string alteredContent = "";
+                            using(FileStream fs = File.OpenRead(dateiName))
+                            {
+                                StreamReader sr = new StreamReader(fs);
+                                fileContent = sr.ReadToEnd();
+                            }
+                            alteredContent = fileContent.Replace(toBeReplaced, replaceWith);
+                            using(FileStream fs = File.Create(dateiName))
+                            {
+                                StreamWriter sr = new StreamWriter(fs);
+                                sr.Write(alteredContent);
+                            }
+
                         }
                         else
                         {
