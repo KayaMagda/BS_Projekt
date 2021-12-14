@@ -356,6 +356,7 @@ namespace bfk
                                 {
                                     streamWriter.Write(number);
                                 }
+
                             }
 
 
@@ -371,11 +372,68 @@ namespace bfk
                     {
                         string key = ArgsWalker.argsWalker(1, args);
                         string encodedFile = ArgsWalker.argsWalker(2, args);
-                        string pathToTextfile = Path.Combine(path, encodedFile);
-                        if (File.Exists(pathToTextfile))
+                        string pathToEncodedfile = Path.Combine(path, encodedFile);
+                        List<int> decodednumbers = new List<int>();
+                        List<char> decodedCharacters = new List<char>();
+
+                        int[,] allNumbers = new int[10, 10] {
+                           { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                           { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 },
+                           { 2, 3, 4, 5, 6, 7, 8, 9, 0, 1 },
+                           { 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 },
+                           { 4, 5, 6, 7, 8, 9, 0, 1, 2, 3 },
+                           { 5, 6, 7, 8, 9, 0, 1, 2, 3, 4 },
+                           { 6, 7, 8, 9, 0, 1, 2, 3, 4, 5 },
+                           { 7, 8, 9, 0, 1, 2, 3, 4, 5, 6 },
+                           { 8, 9, 0, 1, 2, 3, 4, 5, 6, 7 },
+                           { 9, 0, 1, 2, 3, 4, 5, 6, 7, 8 }
+                        };
+
+                        if (File.Exists(pathToEncodedfile))
                         {
                             int lengthOfKey = key.Length;
+                            string contentOfFile = "";
+                            using(FileStream fs = File.OpenRead(pathToEncodedfile))
+                            {
+                                StreamReader sr = new StreamReader(fs);
+                                contentOfFile = sr.ReadToEnd();
+                            }
+                            for(int i = 0; i < contentOfFile.Length-lengthOfKey; i += lengthOfKey)
+                            {
+                                string asLongAsKey = contentOfFile.Substring(i, lengthOfKey);
+                                for(int j = 0; j < lengthOfKey; j++)
+                                {
+                                    int asKey = (int)key[j];
+                                    int encoded = (int)asLongAsKey[j];
+                                    int decoded = allNumbers[asKey, encoded];
+                                    decodednumbers.Add(decoded);
+                                } 
+                            }
+                            for(int i = 0; i < decodednumbers.Count - 3; i += 3)
+                            {
+                                string asciiString = decodednumbers.GetRange(i, 3).ToString();
+                                int ascii = int.Parse(asciiString);
+                                char character = (char)ascii;
+                                decodedCharacters.Add(character);
 
+                            }
+                            string nameOnly = Path.GetFileNameWithoutExtension(pathToEncodedfile);
+                            string newName = nameOnly + "txt";
+                            string pathToDecodedFile = Path.Combine(path, newName);
+
+                            using(FileStream fs = File.Create(pathToDecodedFile))
+                            {
+                                StreamWriter sw = new StreamWriter(fs);
+                                foreach(char character in decodedCharacters)
+                                {
+                                    sw.WriteLine(character);
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("Die Datei existiert nicht: " + encodedFile);
                         }
                         break;
                     }
