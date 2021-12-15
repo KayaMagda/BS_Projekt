@@ -302,28 +302,23 @@ namespace bfk
                         {
                             textfile = input[1];
                             pathToFile = Path.Combine(path, textfile);
-                           
-                                if (File.Exists(pathToFile))
+                            string compressedContent = "";
+
+                            if (File.Exists(pathToFile))
                                 {
-                                    string contentOfFile = "";
-                                    string compressedContent = "";
+                                string contentOfFile = File.ReadAllText(pathToFile);
+                                
 
-                                    using (StreamReader readFile = File.OpenText(pathToFile))
+                                   
+                                    for (int i = 0; i <= 26; i++)
                                     {
-
-                                        contentOfFile = readFile.ReadToEnd();
-
-                                    }
-
-                                    for (int i = 0; i <= 29; i++)
-                                    {
+                                        int counter = 0;
+                                        string letterOfAlphabet = alphabet[i];
 
                                         foreach (char letter in contentOfFile)
                                         {
-                                            int counter = 0;
-
-
-                                            if (letter.ToString() == alphabet[i])
+                                        
+                                            if (letter.ToString() == letterOfAlphabet)
                                             {
 
                                                 counter += 1;
@@ -336,23 +331,28 @@ namespace bfk
                                                 if (counter > 3)
                                                 {
 
-                                                    compressedContent = compressedContent + "§" + counter + letter;
+                                                    int index = contentOfFile.IndexOf(letter);
+                                                    string prevLetter = contentOfFile.Substring(index - 1, 1);
+                                                    string toAppend = "§" + counter + prevLetter;
+                                                    compressedContent += toAppend;
+                                                    break;
 
                                                 }
                                                 else
                                                 {
                                                     string toAppend = "";
-                                                    for (i = 1; i <= counter; i++)
+                                                    int index = contentOfFile.IndexOf(letter);
+                                                    string prevLetter = contentOfFile.Substring(index - 1, 1);
+                                                    for (int j = 1; j <= counter; j++)
                                                     {
 
-                                                        toAppend = toAppend + letter;
+                                                        toAppend += prevLetter;
 
                                                     }
-                                                    compressedContent = compressedContent + toAppend;
-
+                                                    compressedContent += toAppend;
+                                                    break;
 
                                                 }
-                                                continue;
                                             }
                                             else
                                             {
@@ -361,17 +361,14 @@ namespace bfk
 
                                             }
 
-
                                         }
 
-
                                     }
+                                    
                                     using (FileStream fs = File.Create(pathToFile))
                                     {
-                                        StreamWriter compressContent = new StreamWriter(fs);
-                                        compressContent.Write(compressedContent);
-                                        compressContent.Close();
-
+                                       StreamWriter compressContent = new StreamWriter(fs);
+                                       compressContent.Write(compressedContent);
                                     }
                                     Console.WriteLine("Dateiinhalt wurde komprimiert.");
                                     break;
