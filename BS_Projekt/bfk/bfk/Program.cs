@@ -313,18 +313,48 @@ namespace bfk
                                     for (int i = 0; i <= 26; i++)
                                     {
                                         int counter = 0;
+                                        int indexCounter = 0;
                                         string letterOfAlphabet = alphabet[i];
 
                                         foreach (char letter in contentOfFile)
                                         {
+
+                                        indexCounter += 1;
                                         
-                                            if (letter.ToString() == letterOfAlphabet)
+                                        if (letter.ToString() == letterOfAlphabet)
+                                        {
+
+                                            counter += 1;
+                                            
+                                            if(indexCounter == contentOfFile.Length)
                                             {
+                                                if(counter > 3) 
+                                                {                                                   
+                                                    string toAppend = "§" + counter + letter;
+                                                    compressedContent += toAppend;
+                                                    break;
+                                                }
+                                                else if (counter == 1)
+                                                {
+                                                    compressedContent += letter;
+                                                }
+                                                else
+                                                {
+                                                    string toAppend = "";
+                                                    for (int j = 1; j <= counter; j++)
+                                                    {
+                                                        toAppend += letter;
+                                                    }
+                                                    compressedContent += toAppend;
+                                                    break;
 
-                                                counter += 1;
-                                                continue;
-
+                                                }
+                                            
                                             }
+
+                                        }
+                                           
+                                           
                                             else if (counter != 0)
                                             {
 
@@ -364,12 +394,8 @@ namespace bfk
                                         }
 
                                     }
-                                    
-                                    using (FileStream fs = File.Create(pathToFile))
-                                    {
-                                       StreamWriter compressContent = new StreamWriter(fs);
-                                       compressContent.Write(compressedContent);
-                                    }
+
+                                File.WriteAllText(pathToFile, compressedContent);
                                     Console.WriteLine("Dateiinhalt wurde komprimiert.");
                                     break;
                                 }
@@ -381,20 +407,18 @@ namespace bfk
                     {
                         string textfile;
                         string pathtoFile;
-                       if (!commandtroughinput)
-                       {                        
-                        textfile = ArgsWalker.argsWalker(1, args);
-                        pathtoFile = Path.Combine(path, textfile);
+                        if (!commandtroughinput)
+                        {
+                            textfile = ArgsWalker.argsWalker(1, args);
+                            pathtoFile = Path.Combine(path, textfile);
+                        
 
                         if (File.Exists(pathtoFile))
                         {
-                            string contentOfFile = "";
+                            string contentOfFile = File.ReadAllText(pathtoFile);
                             string decompressedContent = "";
 
-                            using (StreamReader streamReader = new StreamReader(pathtoFile))
-                            {
-                                contentOfFile = streamReader.ReadToEnd();
-                            }
+                           
                             foreach (char character in contentOfFile)
                             {
                                 if (character != '§')
@@ -403,7 +427,6 @@ namespace bfk
                                 }
                                 else
                                 {
-
                                     int index = contentOfFile.IndexOf(character);
                                     int amount = contentOfFile[index + 1];
                                     for (int i = 0; i < amount; i++)
@@ -414,14 +437,7 @@ namespace bfk
 
                                 }
                             }
-                            using (FileStream fs = File.Create(pathtoFile))
-                            {
-                                using (StreamWriter decompressContent = new StreamWriter(fs))
-                                {
-                                    decompressContent.Write(decompressedContent);
-                                }
-
-                            }
+                                File.WriteAllText(pathtoFile, decompressedContent);
 
                             Console.WriteLine("Inhalt wurde dekomprimiert");
                             
@@ -441,6 +457,8 @@ namespace bfk
                             {
                                 string contentOfFile = "";
                                 string decompressedContent = "";
+                                int indexCounter = 0;
+                                
 
                                 using (StreamReader streamReader = new StreamReader(pathtoFile))
                                 {
@@ -448,18 +466,27 @@ namespace bfk
                                 }
                                 foreach (char character in contentOfFile)
                                 {
-                                    if (character != '§')
+                                    indexCounter += 1;
+                                    char prevCharacter = 'a';
+                                    if (indexCounter - 1 <= contentOfFile.Length && indexCounter > 0 ) 
                                     {
-                                        decompressedContent = decompressedContent + character;
+                                        prevCharacter = contentOfFile[indexCounter - 1];
                                     }
-                                    else
+
+                                    if (character != '§' && !Char.IsNumber(character) && !Char.IsNumber(prevCharacter))
+                                    {
+                                        decompressedContent += character;
+                                    }
+                                    else if(character == '§')
                                     {
 
-                                        int index = contentOfFile.IndexOf(character);
-                                        int amount = contentOfFile[index + 1];
+                                        int index = indexCounter - 1;
+                                        char number = contentOfFile[index + 1];
+                                        string forParse = number.ToString();
+                                        int amount = int.Parse(forParse);
                                         for (int i = 0; i < amount; i++)
                                         {
-                                            decompressedContent = decompressedContent + contentOfFile[index + 2];
+                                            decompressedContent += contentOfFile[index + 2];
                                         }
 
 
