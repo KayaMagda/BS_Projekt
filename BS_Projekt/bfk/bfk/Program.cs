@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -56,7 +57,8 @@ namespace bfk
             {
                 Console.WriteLine($"Bitte gib deinen Befehl ein:\n");
                 string uncleaned = Console.ReadLine();
-                string lowercase = uncleaned.ToLower();
+                string nextStep = uncleaned.Replace("/", "");
+                string lowercase = nextStep.ToLower();
                 input = lowercase.Split(" ");
                 command = input[0];
                 commandtroughinput = true;
@@ -67,17 +69,18 @@ namespace bfk
             {
                 string uncleaned = args[0];
                 string deletedwhitespace = uncleaned.Replace(" ", "");
+                string nextStep = deletedwhitespace.Replace("/", "");
                 command = deletedwhitespace.ToLower();
                 Console.WriteLine(command);
 
             }
             switch (command)
             {
-                case "/list":
+                case "list":
                     {
                         break;
                     }
-                case "/filelist":
+                case "filelist":
 
                     {
                         if (args.Length == 1 || input.Length == 1)
@@ -192,17 +195,17 @@ namespace bfk
 
                     
              
-                case "/backup":
+                case "backup":
                     {
                         string zusatz = ArgsWalker.argsWalker(1, args);
                         break;
                     }
-                case "/xml":
+                case "xml":
                     {
                         string dateiname = ArgsWalker.argsWalker(1, args);
                         break;
                     }
-                case "/join":
+                case "join":
                     {
                         string dateiEins = ArgsWalker.argsWalker(1, args);                     
                         string dateiZwei = ArgsWalker.argsWalker(2, args);
@@ -210,92 +213,98 @@ namespace bfk
 
                         break;
                     }
-                case "/compress":
+                case "compress":
                     {
-                        string textfile;
-                        string pathToFile;
+                        string textfile = "";
+                        string pathToFile = "";
                         string[] alphabet = Enum.GetNames(typeof(Alphabet));
 
                         if (!commandtroughinput) 
-                        { 
-                         textfile = ArgsWalker.argsWalker(1, args);
-                         pathToFile = Path.Combine(path, textfile);
-                        
-
-                        
-                        if (File.Exists(pathToFile))
                         {
-                            string contentOfFile = "";
-                            string compressedContent = "";
-
-                            using (StreamReader readFile = File.OpenText(pathToFile))
+                            try
                             {
-
-                                contentOfFile = readFile.ReadToEnd();
-
+                                textfile = ArgsWalker.argsWalker(1, args);
+                                pathToFile = Path.Combine(path, textfile);
                             }
-                        
-                        for (int i = 0; i <= 29; i++)
-                        {
-
-                            foreach (char letter in contentOfFile)
+                            catch(IndexOutOfRangeException)
                             {
-                                int counter = 0;
+                                Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                            }
 
+                            if (File.Exists(pathToFile))
+                            {
+                                string contentOfFile = "";
+                                string compressedContent = "";
 
-                                if (letter.ToString() == alphabet[i])
+                                using (StreamReader readFile = File.OpenText(pathToFile))
                                 {
 
-                                    counter += 1;
-                                    continue;
+                                    contentOfFile = readFile.ReadToEnd();
 
                                 }
-                                else if (counter != 0)
+
+                                for (int i = 0; i <= 29; i++)
                                 {
 
-                                    if (counter > 3)
+                                    foreach (char letter in contentOfFile)
                                     {
+                                        int counter = 0;
 
-                                        compressedContent = compressedContent + "§" + counter + letter;
 
-                                    }
-                                    else
-                                    {
-                                        string toAppend = "";
-                                        for (i = 1; i <= counter; i++)
+                                        if (letter.ToString() == alphabet[i])
                                         {
 
-                                            toAppend = toAppend + letter;
+                                            counter += 1;
+                                            continue;
 
                                         }
-                                        compressedContent = compressedContent + toAppend;
+                                        else if (counter != 0)
+                                        {
+
+                                            if (counter > 3)
+                                            {
+
+                                                compressedContent = compressedContent + "§" + counter + letter;
+
+                                            }
+                                            else
+                                            {
+                                                string toAppend = "";
+                                                for (i = 1; i <= counter; i++)
+                                                {
+
+                                                    toAppend = toAppend + letter;
+
+                                                }
+                                                compressedContent = compressedContent + toAppend;
+
+
+                                            }
+                                            continue;
+                                        }
+                                        else
+                                        {
+
+                                            continue;
+
+                                        }
 
 
                                     }
-                                    continue;
+
+
                                 }
-                                else
+                                using (FileStream fs = File.Create(pathToFile))
                                 {
-
-                                    continue;
+                                    StreamWriter compressContent = new StreamWriter(fs);
+                                    compressContent.Write(compressedContent);
+                                    compressContent.Close();
 
                                 }
-
-
-                            }
-
-
+                                Console.WriteLine("Dateiinhalt wurde komprimiert.");
+                                break;
+                            
                         }
-                        using (FileStream fs = File.Create(pathToFile))
-                        {
-                            StreamWriter compressContent = new StreamWriter(fs);
-                            compressContent.Write(compressedContent);
-                            compressContent.Close();
-
-                        }
-                        Console.WriteLine("Dateiinhalt wurde komprimiert.");
-                        break;
-                    }
                         else { Console.WriteLine("Diese Datei gibt es nicht: " + textfile); }
                         }
                         else
@@ -403,7 +412,7 @@ namespace bfk
                             }
                         break;
                     }
-                case "/decompress":
+                case "decompress":
                     {
                         string textfile;
                         string pathtoFile;
@@ -515,12 +524,39 @@ namespace bfk
 
                         break;
                     }
-                case "/encrypt":
+                case "encrypt":
                     {
                       if (!commandtroughinput) 
-                      { 
-                        int key = int.Parse(ArgsWalker.argsWalker(1, args));
-                        string textfile = ArgsWalker.argsWalker(2, args);
+                      {
+                            string textfile = "";
+                            int key = 0;
+                            try
+                            { 
+                                key = int.Parse(ArgsWalker.argsWalker(1, args));
+                            }
+                            catch (System.FormatException)
+                            {
+                                Console.WriteLine("Der Schlüssel zum Verschlüsseln muss aus Zahlen bestehen.");
+                                Console.WriteLine("Versuchs nochmal.");
+                                break;
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Du musst noch einen Schlüssel und eine Datei angeben.");
+                                Console.WriteLine("Versuchs nochmal.");
+                                break;                                
+                            }
+                            
+                            try
+                            {
+                                textfile = ArgsWalker.argsWalker(2, args);
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlt noch eine Datei zum Verschlüsseln.");
+                                break;
+                            }
+
                         string pathToFile = Path.Combine(path, textfile);
 
 
@@ -537,75 +573,112 @@ namespace bfk
                            { 9, 0, 1, 2, 3, 4, 5, 6, 7, 8 }
                         };
 
-                        if (File.Exists(pathToFile))
-                        {
-                            string contentOfFile = "";
-                            List<int> allAscii = new List<int>();
-                            List<int> encodedContent = new List<int>();
-
-
-                            using (StreamReader reader = new StreamReader(pathToFile))
+                            if (File.Exists(pathToFile))
                             {
-                                contentOfFile = reader.ReadToEnd();
-                            }
-                            foreach (char letter in contentOfFile)
-                            {
-                                int ascii = (int)letter;
-                                string asciistr = ascii.ToString();
-                                if (asciistr.Length < 3)
+                                string contentOfFile = "";
+                                List<string> allAscii = new List<string>();
+                                List<int> encodedContent = new List<int>();
+                                contentOfFile = File.ReadAllText(pathToFile);
+
+                                foreach (char letter in contentOfFile)
                                 {
-                                    asciistr = "0" + asciistr;
-                                    ascii = int.Parse(asciistr);
-                                    allAscii.Add(ascii);
+                                    int ascii = (int)letter;
+                                    string asciistr = ascii.ToString();
+                                    if (asciistr.Length < 3)
+                                    {
+                                        asciistr = "0" + asciistr;
+                                        allAscii.Add(asciistr);
 
-                                }
-                                else
-                                {
-                                    allAscii.Add(ascii);
-                                }
-                            }
-
-                            string toEncode = String.Join("", allAscii);
-                            string keyAsString = key.ToString();
-                            int lengthOfKey = keyAsString.Length;
-
-                            for (int i = 0; i < toEncode.Length - lengthOfKey; i += lengthOfKey)
-                            {
-                                string asLongAsKey = toEncode.Substring(i, lengthOfKey);
-
-                                for (int j = 0; j < asLongAsKey.Length; j++)
-                                {
-                                    int notEncoded = (int)asLongAsKey[j];
-                                    int asKey = (int)keyAsString[j];
-                                    int encoded = allNumbers[asKey, notEncoded];
-                                    encodedContent.Add(encoded);
-                                }
-                            }
-                            string[] nameAndType = textfile.Split(".");
-                            string encodedfilename = nameAndType[0] + ".enc";
-                            string pathToEncodedFile = Path.Combine(path, encodedfilename);
-
-                            using (FileStream fileStream = File.Create(pathToEncodedFile))
-                            {
-                                StreamWriter streamWriter = new StreamWriter(fileStream);
-                                foreach (int number in encodedContent)
-                                {
-                                    streamWriter.Write(number);
+                                    }
+                                    else
+                                    {
+                                        allAscii.Add(asciistr);
+                                    }
                                 }
 
+                                string toEncode = String.Join("", allAscii);
+                                string keyAsString = key.ToString();
+                                int lengthOfKey = keyAsString.Length;
+                                int indexCounter = 0;
+                                string asLongAsKey = "";
+                                int lastLength = 0;
+
+                                for (int i = 0; i <= toEncode.Length - (toEncode.Length % lengthOfKey); i += lengthOfKey)
+                                {
+
+                                    indexCounter += lengthOfKey;
+                                    if (indexCounter < toEncode.Length)
+                                    {
+                                        asLongAsKey = toEncode.Substring(i, lengthOfKey);
+                                        for (int j = 0; j < asLongAsKey.Length; j++)
+                                        {
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int notEncoded = int.Parse(parseContent);
+                                            string forParse = keyAsString[j].ToString();
+                                            int asKey = int.Parse(forParse);
+                                            int encoded = allNumbers[asKey, notEncoded];
+                                            encodedContent.Add(encoded);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int shortenBy = indexCounter - toEncode.Length;
+                                        lastLength = lengthOfKey - shortenBy;
+                                        asLongAsKey = toEncode.Substring(i, lastLength);
+                                        for (int j = 0; j < lastLength; j++)
+                                        {
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int notEncoded = int.Parse(parseContent);
+                                            string forParse = keyAsString[j].ToString();
+                                            int asKey = int.Parse(forParse);
+                                            int encoded = allNumbers[asKey, notEncoded];
+                                            encodedContent.Add(encoded);
+                                        }
+
+                                    }
+
+                                }
+                                string contentToWriteInFile = string.Join("", encodedContent.ToArray());
+                                string[] nameAndType = textfile.Split(".");
+                                string encodedfilename = nameAndType[0] + ".enc";
+                                string pathToEncodedFile = Path.Combine(path, encodedfilename);
+
+                                File.WriteAllText(pathToEncodedFile, contentToWriteInFile);
+                                Console.WriteLine("Inhalt wurde verschlüsselt.");
+
                             }
-
-
+                            else
+                            {
+                                Console.WriteLine("Diese Datei existiert nicht: " + textfile);
+                            }
                         }
                         else
                         {
-                            Console.WriteLine("Diese Datei existiert nicht: " + textfile);
-                        }
-                      }
-                        else
-                        {
-                            int key = int.Parse(input[1]);
-                            string textfile = input[2];
+                            int key = 0;
+                            try
+                            { 
+                                key = int.Parse(input[1]);
+                            }
+                            catch (System.FormatException e)
+                            {
+                                Console.WriteLine("Der Schlüssel zum Verschlüsseln muss aus Zahlen bestehen: " + e);
+                                break;
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Ich brauche noch einen Schlüssel und ein Textfile.");
+                                break;
+                            }
+
+                            string textfile = "";
+                            try { 
+                                textfile = input[2];
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Du hast vergessen eine Datei einzugeben. Bitte denke beim nächsten Versuch daran!");
+                                break;
+                            }
                             string pathToFile = Path.Combine(path, textfile);
 
                             int[,] allNumbers = new int[10, 10] {
@@ -624,14 +697,10 @@ namespace bfk
                             if (File.Exists(pathToFile))
                             {
                                 string contentOfFile = "";
-                                List<int> allAscii = new List<int>();
+                                List<string> allAscii = new List<string>();
                                 List<int> encodedContent = new List<int>();
-
-
-                                using (StreamReader reader = new StreamReader(pathToFile))
-                                {
-                                    contentOfFile = reader.ReadToEnd();
-                                }
+                                contentOfFile = File.ReadAllText(pathToFile);
+                               
                                 foreach (char letter in contentOfFile)
                                 {
                                     int ascii = (int)letter;
@@ -639,46 +708,64 @@ namespace bfk
                                     if (asciistr.Length < 3)
                                     {
                                         asciistr = "0" + asciistr;
-                                        ascii = int.Parse(asciistr);
-                                        allAscii.Add(ascii);
+                                        allAscii.Add(asciistr);
 
                                     }
                                     else
                                     {
-                                        allAscii.Add(ascii);
+                                        allAscii.Add(asciistr);
                                     }
                                 }
 
                                 string toEncode = String.Join("", allAscii);
                                 string keyAsString = key.ToString();
                                 int lengthOfKey = keyAsString.Length;
+                                int indexCounter = 0;
+                                string asLongAsKey = "";
+                                int lastLength = 0;
 
-                                for (int i = 0; i < toEncode.Length - lengthOfKey; i += lengthOfKey)
+                                for (int i = 0; i <= toEncode.Length - (toEncode.Length % lengthOfKey); i += lengthOfKey)
                                 {
-                                    string asLongAsKey = toEncode.Substring(i, lengthOfKey);
 
-                                    for (int j = 0; j < asLongAsKey.Length; j++)
-                                    {
-                                        int notEncoded = (int)asLongAsKey[j];
-                                        int asKey = (int)keyAsString[j];
-                                        int encoded = allNumbers[asKey, notEncoded];
-                                        encodedContent.Add(encoded);
+                                    indexCounter += lengthOfKey;
+                                    if (indexCounter < toEncode.Length)
+                                    { 
+                                        asLongAsKey = toEncode.Substring(i, lengthOfKey);
+                                        for (int j = 0; j < asLongAsKey.Length; j++)
+                                        {
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int notEncoded = int.Parse(parseContent);
+                                            string forParse = keyAsString[j].ToString();
+                                            int asKey = int.Parse(forParse);
+                                            int encoded = allNumbers[asKey, notEncoded];
+                                            encodedContent.Add(encoded);
+                                        }
                                     }
+                                    else 
+                                    {
+                                        int shortenBy = indexCounter - toEncode.Length;
+                                        lastLength = lengthOfKey - shortenBy;
+                                        asLongAsKey = toEncode.Substring(i, lastLength);
+                                        for (int j = 0; j < lastLength; j++)
+                                        {
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int notEncoded = int.Parse(parseContent);
+                                            string forParse = keyAsString[j].ToString();
+                                            int asKey = int.Parse(forParse);
+                                            int encoded = allNumbers[asKey, notEncoded];
+                                            encodedContent.Add(encoded);
+                                        }
+
+                                    }
+                                    
                                 }
+                                string contentToWriteInFile = string.Join("", encodedContent.ToArray());
                                 string[] nameAndType = textfile.Split(".");
                                 string encodedfilename = nameAndType[0] + ".enc";
                                 string pathToEncodedFile = Path.Combine(path, encodedfilename);
 
-                                using (FileStream fileStream = File.Create(pathToEncodedFile))
-                                {
-                                    StreamWriter streamWriter = new StreamWriter(fileStream);
-                                    foreach (int number in encodedContent)
-                                    {
-                                        streamWriter.Write(number);
-                                    }
-
-                                }
-
+                                File.WriteAllText(pathToEncodedFile, contentToWriteInFile);
+                                Console.WriteLine("Inhalt wurde verschlüsselt.");
 
                             }
                             else
@@ -690,16 +777,36 @@ namespace bfk
 
                         break;
                     }
-                case "/decrypt":
+                case "decrypt":
                     {
                       if (!commandtroughinput) 
-                      { 
-                        
-                        string key = ArgsWalker.argsWalker(1, args);
-                        string textfile = ArgsWalker.argsWalker(2, args);
-                        string pathToEncodedfile = Path.Combine(path, textfile);
-                        List<int> decodednumbers = new List<int>();
-                        List<char> decodedCharacters = new List<char>();
+                      {
+                            string key = "";
+                            string textfile = "";
+                            int testNumbers = 0;
+                            try
+                            {
+                                testNumbers = int.Parse(ArgsWalker.argsWalker(1, args));
+                            }
+                            catch(System.FormatException)
+                            {
+                                Console.WriteLine("Der Schlüssel zum Entschlüsseln muss aus Zahlen bestehen.");
+                                break;
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlen noch SChlüssel und Datei.");
+                                break;
+                            }
+
+
+                         key = ArgsWalker.argsWalker(1, args);
+                         textfile = ArgsWalker.argsWalker(2, args);
+
+
+                         string pathToEncodedfile = Path.Combine(path, textfile);
+                         List<int> decodednumbers = new List<int>();
+                         List<char> decodedCharacters = new List<char>();
 
                         int[,] allNumbers = new int[10, 10] {
                            { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
@@ -714,57 +821,98 @@ namespace bfk
                            { 9, 0, 1, 2, 3, 4, 5, 6, 7, 8 }
                         };
 
-                        if (File.Exists(pathToEncodedfile))
-                        {
-                            int lengthOfKey = key.Length;
-                            string contentOfFile = "";
-                            using (FileStream fs = File.OpenRead(pathToEncodedfile))
+                            if (File.Exists(pathToEncodedfile))
                             {
-                                StreamReader sr = new StreamReader(fs);
-                                contentOfFile = sr.ReadToEnd();
-                            }
-                            for (int i = 0; i < contentOfFile.Length - lengthOfKey; i += lengthOfKey)
-                            {
-                                string asLongAsKey = contentOfFile.Substring(i, lengthOfKey);
-                                for (int j = 0; j < lengthOfKey; j++)
+                                int lengthOfKey = key.Length;
+                                string contentOfFile = "";
+                                int indexCounter = 0;
+                                int lastLength = 0;
+
+                                contentOfFile = File.ReadAllText(pathToEncodedfile);
+
+                                for (int i = 0; i < contentOfFile.Length - (contentOfFile.Length % lengthOfKey); i += lengthOfKey)
                                 {
-                                    int asKey = (int)key[j];
-                                    int encoded = (int)asLongAsKey[j];
-                                    int decoded = allNumbers[asKey, encoded];
-                                    decodednumbers.Add(decoded);
+                                    indexCounter += lengthOfKey;
+                                    string asLongAsKey = contentOfFile.Substring(i, lengthOfKey);
+
+                                    if (indexCounter < contentOfFile.Length)
+                                    {
+                                        for (int j = 0; j < lengthOfKey; j++)
+                                        {
+                                            string parseKey = key[j].ToString();
+                                            int asKey = int.Parse(parseKey);
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int encoded = int.Parse(parseContent);
+                                            int decoded = allNumbers[asKey, encoded];
+                                            decodednumbers.Add(decoded);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int shortenBy = indexCounter - contentOfFile.Length;
+                                        lastLength = lengthOfKey - shortenBy;
+                                        asLongAsKey = contentOfFile.Substring(i, lastLength);
+
+                                        for (int j = 0; j < lastLength; j++)
+                                        {
+                                            string parseKey = key[j].ToString();
+                                            int asKey = int.Parse(parseKey);
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int encoded = int.Parse(parseContent);
+                                            int decoded = allNumbers[asKey, encoded];
+                                            decodednumbers.Add(decoded);
+                                        }
+                                    }
+                                    for (int k = 0; k < decodednumbers.Count - 3; k += 3)
+                                    {
+                                        string asciiString = decodednumbers.GetRange(k, 3).ToString();
+                                        int ascii = int.Parse(asciiString);
+                                        char character = (char)ascii;
+                                        decodedCharacters.Add(character);
+
+                                    }
+                                    string nameOnly = Path.GetFileNameWithoutExtension(pathToEncodedfile);
+                                    string newName = nameOnly + ".txt";
+                                    string pathToDecodedFile = Path.Combine(path, newName);
+                                    string contentToWrite = string.Join("", decodedCharacters.ToArray());
+                                    File.WriteAllText(pathToDecodedFile, contentToWrite);
+                                    Console.WriteLine("Inhalt wurde entschlüsselt.");                                   
+
                                 }
                             }
-                            for (int i = 0; i < decodednumbers.Count - 3; i += 3)
+                            else
                             {
-                                string asciiString = decodednumbers.GetRange(i, 3).ToString();
-                                int ascii = int.Parse(asciiString);
-                                char character = (char)ascii;
-                                decodedCharacters.Add(character);
-
+                                Console.WriteLine("Die Datei existiert nicht: " + textfile);
                             }
-                            string nameOnly = Path.GetFileNameWithoutExtension(pathToEncodedfile);
-                            string newName = nameOnly + "txt";
-                            string pathToDecodedFile = Path.Combine(path, newName);
-
-                            using (FileStream fs = File.Create(pathToDecodedFile))
-                            {
-                                StreamWriter sw = new StreamWriter(fs);
-                                foreach (char character in decodedCharacters)
-                                {
-                                    sw.WriteLine(character);
-                                }
-                            }
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("Die Datei existiert nicht: " + textfile);
-                        }
                       }
                         else
                         {
+                            int testNumbers = 0;
+                            try
+                            {
+                                testNumbers = int.Parse(input[1]);
+                            }
+                            catch(System.FormatException)
+                            {
+                                Console.WriteLine("Der Schlüssel zum Entschlüsseln muss aus Zahlen bestehen.");
+                                break;
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Ich brauche noch einen Schlüssel und eine Datei.");
+                                break;
+                            }
                             string key = input[1];
-                            string textfile = input[2];
+                            string textfile = "";
+                            try
+                            { 
+                              textfile = input[2];
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Ich brauche noch eine Datei");
+                                break;
+                            }
                             string pathToEncodedfile = Path.Combine(path, textfile);
                             List<int> decodednumbers = new List<int>();
                             List<char> decodedCharacters = new List<char>();
@@ -785,44 +933,69 @@ namespace bfk
                             if (File.Exists(pathToEncodedfile))
                             {
                                 int lengthOfKey = key.Length;
+
                                 string contentOfFile = "";
-                                using (FileStream fs = File.OpenRead(pathToEncodedfile))
+                                contentOfFile = File.ReadAllText(pathToEncodedfile);
+
+                                int lastLength = 0;
+                                int indexCounter = 0;
+
+                                
+                                for (int i = 0; i <= contentOfFile.Length - (contentOfFile.Length % lengthOfKey); i += lengthOfKey)
                                 {
-                                    StreamReader sr = new StreamReader(fs);
-                                    contentOfFile = sr.ReadToEnd();
-                                }
-                                for (int i = 0; i < contentOfFile.Length - lengthOfKey; i += lengthOfKey)
-                                {
+                                    indexCounter += lengthOfKey;
+
+                                  if(indexCounter < contentOfFile.Length)
+                                  { 
                                     string asLongAsKey = contentOfFile.Substring(i, lengthOfKey);
                                     for (int j = 0; j < lengthOfKey; j++)
                                     {
-                                        int asKey = (int)key[j];
-                                        int encoded = (int)asLongAsKey[j];
+                                        string parseKey = key[j].ToString();
+                                        int asKey = int.Parse(parseKey);
+                                        string parseContent = asLongAsKey[j].ToString();
+                                        int encoded = int.Parse(parseContent);
                                         int decoded = allNumbers[asKey, encoded];
                                         decodednumbers.Add(decoded);
                                     }
+                                    }
+                                  else
+                                    {
+                                        int shortenBy = indexCounter - contentOfFile.Length;
+                                        lastLength = lengthOfKey - shortenBy;
+                                        string asLongAsKey = contentOfFile.Substring(i, lastLength);
+                                        for (int j = 0; j < lastLength; j++)
+                                        {
+                                            string parseKey = key[j].ToString();
+                                            int asKey = int.Parse(parseKey);
+                                            string parseContent = asLongAsKey[j].ToString();
+                                            int encoded = int.Parse(parseContent);
+                                            int decoded = allNumbers[asKey, encoded];
+                                            decodednumbers.Add(decoded);
+                                        }
+
+                                    }
                                 }
-                                for (int i = 0; i < decodednumbers.Count - 3; i += 3)
+                                for (int k = 0; k <= decodednumbers.Count - 3; k += 3)
                                 {
-                                    string asciiString = decodednumbers.GetRange(i, 3).ToString();
+                                    List <int> forString = decodednumbers.GetRange(k, 3);
+                                    string asciiString = "";
+                                    foreach(int number in forString)
+                                    {
+                                        string asString = number.ToString();
+                                        asciiString += number;
+
+                                    }
                                     int ascii = int.Parse(asciiString);
                                     char character = (char)ascii;
                                     decodedCharacters.Add(character);
 
                                 }
                                 string nameOnly = Path.GetFileNameWithoutExtension(pathToEncodedfile);
-                                string newName = nameOnly + "txt";
+                                string newName = nameOnly + ".txt";
                                 string pathToDecodedFile = Path.Combine(path, newName);
-
-                                using (FileStream fs = File.Create(pathToDecodedFile))
-                                {
-                                    StreamWriter sw = new StreamWriter(fs);
-                                    foreach (char character in decodedCharacters)
-                                    {
-                                        sw.WriteLine(character);
-                                    }
-                                }
-
+                                string contentToWrite = string.Join("", decodedCharacters.ToArray());
+                                File.WriteAllText(pathToDecodedFile, contentToWrite);
+                                Console.WriteLine("Inhalt wurde entschlüsselt.");
                             }
                             else
                             {
@@ -835,49 +1008,155 @@ namespace bfk
                     {
                         if (commandtroughinput) 
                         {
-                            if (input[1] == "text")
-                            {
-                                string start = input[2];
+                            string commandOne = "";
+                            string start = "";
+                            int startNumber = 0;
+                            try
+                            { commandOne = input[1]; }
+                            catch(IndexOutOfRangeException)
+                            { 
+                                Console.WriteLine("Mir fehlen noch zwei Argumente.");
+                                break;
                             }
-                            else if (input[1] == "num")
+
+                            if (commandOne == "text")
+                            {
+                                try
+                                {
+                                    start = input[2];
+                                }
+                                catch (IndexOutOfRangeException)
+                                {
+                                    Console.WriteLine("Es fehlt noch ein Argument.");
+                                    break;
+                                }
+                                foreach(string file in files)
+                                {
+                                    string currentname = Path.GetFileName(file);
+                                    string newName = start + currentname;
+                                    File.Move(currentname, newName);
+                                }
+                                Console.WriteLine("Dateien wurden umbenannt.");
+                            }
+                            else if (commandOne == "num")
                             {
                                 int allFiles = files.Length;
-                                int needZeros = allFiles.ToString().Length;
-                                int start = int.Parse(ArgsWalker.argsWalker(2, args));
+                                Dictionary<string, string> numbersAndNames = new Dictionary<string, string>();
+                                List<string> newNames = new List<string>();
 
+
+                                try
+                                { startNumber = int.Parse(input[2]); }
+                                catch(System.FormatException)
+                                {
+                                    Console.WriteLine("Wenn du num benutzt, musst du schon auch eine Zahl eingeben.");
+                                    break;
+                                }
+                                List<string> allNumbers = new List<string>();
+                                int needZeros = allFiles.ToString().Length ;
+                                for (int i = startNumber; i < allFiles + startNumber; i++)
+                                {
+                                    string asString = i.ToString();
+                                    while(asString.Length < needZeros)
+                                    {
+                                        asString = "0" + asString;
+                                    }
+                                    allNumbers.Add(asString);
+                                }
+                                for(int i = 0; i < allFiles; i++)
+                                {
+                                    numbersAndNames.Add(Path.GetFileName(files[i]), allNumbers[i]);
+                                }
+                               
+                               foreach(string file in files)
+                                {
+                                    string currentName = Path.GetFileName(file);
+                                    string toAdd = numbersAndNames[currentName];
+                                    string newName = toAdd + currentName;
+                                    File.Move(currentName, newName);
+                                }
+                                Console.WriteLine("Dateien wurden umbenannt.");
                             }
                             else
                             {
-                                Console.WriteLine("Diesen Befehl kenne ich nicht");
+                                Console.WriteLine("Diesen Befehl kenne ich nicht " + command);
                             }
                         }
                         else 
-                        { 
-                        if (ArgsWalker.argsWalker(1, args) == "text")
                         {
-                            string start = ArgsWalker.argsWalker(2, args);
+                            string commandOne = "";
+                            string start = "";
+                            int startNumber = 0;
+                            try 
+                            { commandOne = ArgsWalker.argsWalker(1, args); }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlen noch zwei Argumente");
+                                break;
+                            }
+                        if ( commandOne == "text")
+                        {
+                           start = ArgsWalker.argsWalker(2, args);
+                        
+                            foreach (string file in files)
+                            {
+                                string currentname = Path.GetFileName(file);
+                                string newName = start + currentname;
+                                File.Move(currentname, newName);
+                            }
+                                Console.WriteLine("Dateien wurden umbenannt.");
                         }
-                        else if (ArgsWalker.argsWalker(1, args) == "num")
+                        else if (commandOne == "num")
                         {
                             int allFiles = files.Length;
                             int needZeros = allFiles.ToString().Length;
-                            int start = int.Parse(ArgsWalker.argsWalker(2, args));
-                            
-                        }
-                        else
+                            Dictionary<string, string> numbersAndNames = new Dictionary<string, string>();
+                            try
+                            { startNumber = int.Parse(ArgsWalker.argsWalker(2, args)); }
+                            catch (System.FormatException)
+                            {
+                                Console.WriteLine("Wenn du num benutzt, musst du schon auch eine Zahl eingeben.");
+                                break;
+                            }
+                                List<string> allNumbers = new List<string>();
+                                needZeros = allFiles.ToString().Length;
+                                for (int i = startNumber; i < allFiles + startNumber; i++)
+                                {
+                                    string asString = i.ToString();
+                                    while (asString.Length < needZeros)
+                                    {
+                                        asString = "0" + asString;
+                                    }
+                                    allNumbers.Add(asString);
+                                }
+                                for (int i = 0; i < allFiles; i++)
+                                {
+                                    numbersAndNames.Add(Path.GetFileName(files[i]), allNumbers[i]);
+                                }
+
+                                foreach (string file in files)
+                                {
+                                    string currentName = Path.GetFileName(file);
+                                    string toAdd = numbersAndNames[currentName];
+                                    string newName = toAdd + currentName;
+                                    File.Move(currentName, newName);
+                                }
+                                Console.WriteLine("Dateien wurden umbenannt.");
+                            }
+                            else
                         {
-                            Console.WriteLine("Diesen Befehl kenne ich nicht");
+                            Console.WriteLine("Diesen Befehl kenne ich nicht " + command);
                         }
                         }
                         break;
                     }
-                case "/find":
+                case "find":
                     {
                         string dateiEndung = ArgsWalker.argsWalker(1, args);
                         string suchString = ArgsWalker.argsWalker(2, args);
                         break;
                     }
-                case "/replace":
+                case "replace":
                     {
                         if (commandtroughinput) 
                         {
@@ -889,17 +1168,14 @@ namespace bfk
                                 string fileContent = "";
                                 string alteredContent = "";
 
-                                using (FileStream fs = File.OpenRead(dateiName))
-                                {
-                                    StreamReader sr = new StreamReader(fs);
-                                    fileContent = sr.ReadToEnd();
-                                }
-                                alteredContent = fileContent.Replace(toBeReplaced, replaceWith);
-                                using (FileStream fs = File.Create(dateiName))
-                                {
-                                    StreamWriter sr = new StreamWriter(fs);
-                                    sr.Write(alteredContent);
-                                }
+                                fileContent = File.ReadAllText(dateiName);
+
+                                CultureInfo cultureInfo = new CultureInfo("de-DE", false);
+
+
+                                alteredContent = fileContent.Replace(toBeReplaced, replaceWith, true, cultureInfo);
+                                File.WriteAllText(dateiName, alteredContent);
+                                Console.WriteLine("Inhalt wurde verändert.");
                             }
                             else
                             {
@@ -916,17 +1192,14 @@ namespace bfk
                                 string replaceWith = ArgsWalker.argsWalker(3, args);
                                 string fileContent = "";
                                 string alteredContent = "";
-                                using (FileStream fs = File.OpenRead(dateiName))
-                                {
-                                    StreamReader sr = new StreamReader(fs);
-                                    fileContent = sr.ReadToEnd();
-                                }
-                                alteredContent = fileContent.Replace(toBeReplaced, replaceWith);
-                                using (FileStream fs = File.Create(dateiName))
-                                {
-                                    StreamWriter sr = new StreamWriter(fs);
-                                    sr.Write(alteredContent);
-                                }
+                                fileContent = File.ReadAllText(dateiName);
+
+                                CultureInfo cultureInfo = new CultureInfo("de-DE", false);
+
+
+                                alteredContent = fileContent.Replace(toBeReplaced, replaceWith, true, cultureInfo);
+                                File.WriteAllText(dateiName, alteredContent);
+                                Console.WriteLine("Inhalt wurde verändert.");
                             }
                         else
                         {
@@ -938,7 +1211,7 @@ namespace bfk
                 
                 default:
                     {
-                        Console.WriteLine("Diesen Befehl kenne ich nicht.");
+                        Console.WriteLine("Diesen Befehl kenne ich nicht. " + command);
                         break;
                     }
             }
