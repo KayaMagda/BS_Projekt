@@ -1,0 +1,14 @@
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.csproj.AssemblyReference.cache
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.AssemblyInfoInputs.cache
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.AssemblyInfo.cs
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.csproj.CoreCompileInputs.cache
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.exe
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.deps.json
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.runtimeconfig.json
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.runtimeconfig.dev.json
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.dll
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Debug\netcoreapp3.0\bfk.pdb
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.dll
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.pdb
+C:\Users\kaya.kopp\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Debug\netcoreapp3.0\bfk.genruntimeconfig.cache
