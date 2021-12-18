@@ -62,7 +62,6 @@ namespace bfk
                 input = lowercase.Split(" ");
                 command = input[0];
                 commandtroughinput = true;
-                //Console.WriteLine(commandthroughinput);
             }
                
             else
@@ -70,8 +69,7 @@ namespace bfk
                 string uncleaned = args[0];
                 string deletedwhitespace = uncleaned.Replace(" ", "");
                 string nextStep = deletedwhitespace.Replace("/", "");
-                command = deletedwhitespace.ToLower();
-                Console.WriteLine(command);
+                command = nextStep.ToLower();
 
             }
             switch (command)
@@ -96,7 +94,13 @@ namespace bfk
                             string secondcommand = "";
                             if (commandtroughinput)
                             {
-                                secondcommand = input[1];
+                                try { secondcommand = input[1]; }
+                                catch (IndexOutOfRangeException)
+
+                                { Console.WriteLine("Ich habe zu wenig Argumente.");
+                                    break;                                
+                                }
+
                                 if (secondcommand == "type")
                                 {
                                     try
@@ -110,11 +114,10 @@ namespace bfk
                                             }
                                         }
                                     }
-                                    catch (IndexOutOfRangeException e)
-                                    {
+                                    catch (IndexOutOfRangeException)
+                                    { 
 
                                         Console.WriteLine("Du hast den Typ vergessen.");
-                                        Console.WriteLine(e);
 
                                     }
                                 }
@@ -214,6 +217,7 @@ namespace bfk
                         break;
                     }
                 case "compress":
+                    
                     {
                         string textfile = "";
                         string pathToFile = "";
@@ -229,58 +233,85 @@ namespace bfk
                             catch(IndexOutOfRangeException)
                             {
                                 Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                                break;
                             }
 
                             if (File.Exists(pathToFile))
                             {
                                 string contentOfFile = "";
+                                contentOfFile = File.ReadAllText(pathToFile);
                                 string compressedContent = "";
+                                string[] correctPositions = new string[contentOfFile.Length];
 
-                                using (StreamReader readFile = File.OpenText(pathToFile))
+                                for (int i = 0; i <= 26; i++)
                                 {
-
-                                    contentOfFile = readFile.ReadToEnd();
-
-                                }
-
-                                for (int i = 0; i <= 29; i++)
-                                {
+                                    int counter = 0;
+                                    int indexCounter = 0;
+                                    string letterOfAlphabet = alphabet[i];
 
                                     foreach (char letter in contentOfFile)
                                     {
-                                        int counter = 0;
 
+                                        indexCounter += 1;
 
-                                        if (letter.ToString() == alphabet[i])
+                                        if (letter.ToString() == letterOfAlphabet)
                                         {
 
                                             counter += 1;
-                                            continue;
 
+                                            if (indexCounter == contentOfFile.Length)
+                                            {
+                                                if (counter > 3)
+                                                {
+                                                    string toAppend = "§" + counter + letter;
+                                                    correctPositions[indexCounter - 1] = toAppend;
+                                                    break;
+                                                }
+                                                else if (counter == 1)
+                                                {
+                                                    correctPositions[indexCounter - 1] = letter.ToString();
+                                                }
+                                                else
+                                                {
+                                                    string toAppend = "";
+                                                    for (int j = 1; j <= counter; j++)
+                                                    {
+                                                        toAppend += letter;
+                                                    }
+                                                    correctPositions[indexCounter - 1] = toAppend;
+                                                    break;
+                                                }
+                                            }
                                         }
+
                                         else if (counter != 0)
                                         {
 
                                             if (counter > 3)
                                             {
 
-                                                compressedContent = compressedContent + "§" + counter + letter;
+                                                int index = contentOfFile.IndexOf(letter);
+                                                string prevLetter = contentOfFile.Substring(index - 1, 1);
+                                                string toAppend = "§" + counter + prevLetter;
+                                                correctPositions[indexCounter - 1] = toAppend;
+                                                break;
 
                                             }
                                             else
                                             {
                                                 string toAppend = "";
-                                                for (i = 1; i <= counter; i++)
+                                                int index = contentOfFile.IndexOf(letter);
+                                                string prevLetter = contentOfFile.Substring(index - 1, 1);
+                                                for (int j = 1; j <= counter; j++)
                                                 {
 
-                                                    toAppend = toAppend + letter;
+                                                    toAppend += prevLetter;
 
                                                 }
-                                                compressedContent = compressedContent + toAppend;
-
+                                                correctPositions[indexCounter - 1] = toAppend;
+                                                break;
 
                                             }
-                                            continue;
                                         }
                                         else
                                         {
@@ -289,37 +320,35 @@ namespace bfk
 
                                         }
 
-
                                     }
 
-
                                 }
-                                using (FileStream fs = File.Create(pathToFile))
-                                {
-                                    StreamWriter compressContent = new StreamWriter(fs);
-                                    compressContent.Write(compressedContent);
-                                    compressContent.Close();
 
-                                }
+                                compressedContent = string.Join("", correctPositions);
+                                File.WriteAllText(pathToFile, compressedContent);
                                 Console.WriteLine("Dateiinhalt wurde komprimiert.");
                                 break;
-                            
-                        }
-                        else { Console.WriteLine("Diese Datei gibt es nicht: " + textfile); }
+                            }
+                            else { Console.WriteLine("Diese Datei gibt es nicht: " + textfile); }
                         }
                         else
-                        {
-                            textfile = input[1];
+                        {   try
+                            {
+                                textfile = input[1];
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                            }
                             pathToFile = Path.Combine(path, textfile);
                             string compressedContent = "";
 
                             if (File.Exists(pathToFile))
                                 {
                                 string contentOfFile = File.ReadAllText(pathToFile);
-                                
+                                string[] correctPositions = new string[contentOfFile.Length];
 
-                                   
-                                    for (int i = 0; i <= 26; i++)
+                                for (int i = 0; i <= 26; i++)
                                     {
                                         int counter = 0;
                                         int indexCounter = 0;
@@ -340,12 +369,12 @@ namespace bfk
                                                 if(counter > 3) 
                                                 {                                                   
                                                     string toAppend = "§" + counter + letter;
-                                                    compressedContent += toAppend;
+                                                    correctPositions[indexCounter - 1] = toAppend;
                                                     break;
                                                 }
                                                 else if (counter == 1)
                                                 {
-                                                    compressedContent += letter;
+                                                    correctPositions[indexCounter - 1] = letter.ToString();
                                                 }
                                                 else
                                                 {
@@ -354,15 +383,11 @@ namespace bfk
                                                     {
                                                         toAppend += letter;
                                                     }
-                                                    compressedContent += toAppend;
+                                                    correctPositions[indexCounter - 1] = toAppend;
                                                     break;
-
                                                 }
-                                            
                                             }
-
                                         }
-                                           
                                            
                                             else if (counter != 0)
                                             {
@@ -373,7 +398,7 @@ namespace bfk
                                                     int index = contentOfFile.IndexOf(letter);
                                                     string prevLetter = contentOfFile.Substring(index - 1, 1);
                                                     string toAppend = "§" + counter + prevLetter;
-                                                    compressedContent += toAppend;
+                                                correctPositions[indexCounter - 1] = toAppend;
                                                     break;
 
                                                 }
@@ -388,7 +413,7 @@ namespace bfk
                                                         toAppend += prevLetter;
 
                                                     }
-                                                    compressedContent += toAppend;
+                                                correctPositions[indexCounter - 1] = toAppend;
                                                     break;
 
                                                 }
@@ -404,6 +429,7 @@ namespace bfk
 
                                     }
 
+                                compressedContent = string.Join("", correctPositions);
                                 File.WriteAllText(pathToFile, compressedContent);
                                     Console.WriteLine("Dateiinhalt wurde komprimiert.");
                                     break;
@@ -414,11 +440,18 @@ namespace bfk
                     }
                 case "decompress":
                     {
-                        string textfile;
+                        string textfile = "";
                         string pathtoFile;
                         if (!commandtroughinput)
                         {
-                            textfile = ArgsWalker.argsWalker(1, args);
+                            try
+                            {
+                                textfile = ArgsWalker.argsWalker(1, args);
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                            }
                             pathtoFile = Path.Combine(path, textfile);
                         
 
@@ -460,7 +493,14 @@ namespace bfk
                        }
                         else
                         {
-                            textfile = input[1];
+                            try
+                            {
+                                textfile = input[1];
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                            }
                             pathtoFile = Path.Combine(path, textfile);
                             if (File.Exists(pathtoFile))
                             {
@@ -1215,8 +1255,7 @@ namespace bfk
                         break;
                     }
             }
-            Console.WriteLine("Drücke irgendeine Taste zum Beenden");
-            Console.ReadKey();
+            Console.WriteLine("\nProgramm wird beendet.");
         }
     }
 }
