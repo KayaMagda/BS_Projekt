@@ -76,6 +76,7 @@ namespace bfk
             {
                 case "list":
                     {
+                        list.aufruf();
                         break;
                     }
                 case "filelist":
@@ -194,26 +195,71 @@ namespace bfk
                         }
                         break;
                     }
-
-
-                    
-             
                 case "backup":
                     {
-                        string zusatz = ArgsWalker.argsWalker(1, args);
+                        if(commandtroughinput)
+                        {
+                            try
+                            { 
+                            backup.aufruf(input);
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlen noch Argumente.");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                backup.aufruf(args);
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlen noch Argumente.");
+                            }
+                        }
+                        Console.WriteLine("Backup wurde erstellt.");
                         break;
                     }
                 case "xml":
                     {
-                        string dateiname = ArgsWalker.argsWalker(1, args);
+                        if(commandtroughinput)
+                        {
+                            try
+                            {
+                                xml.aufruf(input);
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlt noch der Dateiname.");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                xml.aufruf(args);
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlt noch der Dateiname.");
+                            }
+                        }
+                        Console.WriteLine("Die .xml Datei wurde erstellt.");
                         break;
                     }
                 case "join":
                     {
-                        string dateiEins = ArgsWalker.argsWalker(1, args);                     
-                        string dateiZwei = ArgsWalker.argsWalker(2, args);
-                        
-
+                        if(commandtroughinput)
+                        {
+                            join.aufruf(input);
+                        }
+                        else 
+                        {
+                            join.aufruf(args);
+                        }
+                        Console.WriteLine("Inhalt wurde zusammengefügt.");
                         break;
                     }
                 case "compress":
@@ -1192,8 +1238,30 @@ namespace bfk
                     }
                 case "find":
                     {
-                        string dateiEndung = ArgsWalker.argsWalker(1, args);
-                        string suchString = ArgsWalker.argsWalker(2, args);
+                        if(commandtroughinput)
+                        {
+                            try
+                            {
+                                find.aufruf(input);
+                            }
+                            catch(IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlen noch Argumente");
+                            }
+                        }
+                        else
+                        {
+                            try
+                            {
+                                find.aufruf(args);
+                            }
+                            catch (IndexOutOfRangeException)
+                            {
+                                Console.WriteLine("Mir fehlen noch Argumente");
+                            }
+
+                        }
+                        
                         break;
                     }
                 case "replace":

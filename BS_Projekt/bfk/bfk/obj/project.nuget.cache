@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "JfJI/FzDAzIw4p/eKTrPYYqRJQI0GiToTLHCf4vT25OAHwq3qP/U8I6Bb1TMoFsOtAfHZ3eCp0o3D1KdAiQkNQ==",
+  "dgSpecHash": "+hXimMWecpNU40GGY6NupAICUPXkQJZ3ZHDlc7jBGLyuPiYWZOyLGwqjPhgweqsNu3JfsvF8Yo6YQJ5BLVr3Dw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\kayak\\Source\\Repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj",
+  "projectFilePath": "C:\\Users\\kayak\\source\\repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kayak\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.0.3\\microsoft.netcore.app.host.win-x64.3.0.3.nupkg.sha512",
     "C:\\Users\\kayak\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.0.1\\microsoft.aspnetcore.app.ref.3.0.1.nupkg.sha512",

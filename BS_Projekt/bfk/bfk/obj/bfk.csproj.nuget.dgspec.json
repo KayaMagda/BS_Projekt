@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\kayak\\Source\\Repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj": {}
+    "C:\\Users\\kayak\\source\\repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj": {}
   },
   "projects": {
-    "C:\\Users\\kayak\\Source\\Repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj": {
+    "C:\\Users\\kayak\\source\\repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\kayak\\Source\\Repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj",
+        "projectUniqueName": "C:\\Users\\kayak\\source\\repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj",
         "projectName": "bfk",
-        "projectPath": "C:\\Users\\kayak\\Source\\Repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj",
+        "projectPath": "C:\\Users\\kayak\\source\\repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\bfk.csproj",
         "packagesPath": "C:\\Users\\kayak\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\kayak\\Source\\Repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\obj\\",
+        "outputPath": "C:\\Users\\kayak\\source\\repos\\BS_Projekt\\BS_Projekt\\bfk\\bfk\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\kayak\\AppData\\Roaming\\NuGet\\NuGet.Config",
