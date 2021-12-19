@@ -1,0 +1,14 @@
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Release\netcoreapp3.0\bfk.exe
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Release\netcoreapp3.0\bfk.deps.json
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Release\netcoreapp3.0\bfk.runtimeconfig.json
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Release\netcoreapp3.0\bfk.runtimeconfig.dev.json
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Release\netcoreapp3.0\bfk.dll
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\bin\Release\netcoreapp3.0\bfk.pdb
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.csproj.AssemblyReference.cache
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.AssemblyInfoInputs.cache
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.AssemblyInfo.cs
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.csproj.CoreCompileInputs.cache
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.dll
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.pdb
+C:\Users\kayak\source\repos\BS_Projekt\BS_Projekt\bfk\bfk\obj\Release\netcoreapp3.0\bfk.genruntimeconfig.cache

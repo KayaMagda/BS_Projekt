@@ -496,7 +496,7 @@ namespace bfk
                             }
                             catch(IndexOutOfRangeException)
                             {
-                                Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                                Console.WriteLine("Du musst noch eine Datei zum Dekomprimieren angeben.");
                             }
                             pathtoFile = Path.Combine(path, textfile);
                         
@@ -505,26 +505,37 @@ namespace bfk
                         {
                             string contentOfFile = File.ReadAllText(pathtoFile);
                             string decompressedContent = "";
+                            int indexCounter = 0;
 
-                           
-                            foreach (char character in contentOfFile)
-                            {
-                                if (character != '§')
+
+                                foreach (char character in contentOfFile)
                                 {
-                                    decompressedContent = decompressedContent + character;
-                                }
-                                else
-                                {
-                                    int index = contentOfFile.IndexOf(character);
-                                    int amount = contentOfFile[index + 1];
-                                    for (int i = 0; i < amount; i++)
+                                    indexCounter += 1;
+                                    char prevCharacter = 'a';
+                                    if (indexCounter - 1 <= contentOfFile.Length && indexCounter > 0)
                                     {
-                                        decompressedContent = decompressedContent + contentOfFile[index + 2];
+                                        prevCharacter = contentOfFile[indexCounter - 1];
                                     }
 
+                                    if (character != '§' && !Char.IsNumber(character) && !Char.IsNumber(prevCharacter))
+                                    {
+                                        decompressedContent += character;
+                                    }
+                                    else if (character == '§')
+                                    {
 
+                                        int index = indexCounter - 1;
+                                        char number = contentOfFile[index + 1];
+                                        string forParse = number.ToString();
+                                        int amount = int.Parse(forParse);
+                                        for (int i = 0; i < amount; i++)
+                                        {
+                                            decompressedContent += contentOfFile[index + 2];
+                                        }
+
+
+                                    }
                                 }
-                            }
                                 File.WriteAllText(pathtoFile, decompressedContent);
 
                             Console.WriteLine("Inhalt wurde dekomprimiert");
@@ -545,7 +556,7 @@ namespace bfk
                             }
                             catch(IndexOutOfRangeException)
                             {
-                                Console.WriteLine("Du musst noch eine Datei zum Komprimieren angeben.");
+                                Console.WriteLine("Du musst noch eine Datei zum Dekomprimieren angeben.");
                             }
                             pathtoFile = Path.Combine(path, textfile);
                             if (File.Exists(pathtoFile))
@@ -553,12 +564,9 @@ namespace bfk
                                 string contentOfFile = "";
                                 string decompressedContent = "";
                                 int indexCounter = 0;
-                                
 
-                                using (StreamReader streamReader = new StreamReader(pathtoFile))
-                                {
-                                    contentOfFile = streamReader.ReadToEnd();
-                                }
+                                contentOfFile = File.ReadAllText(pathtoFile);                              
+
                                 foreach (char character in contentOfFile)
                                 {
                                     indexCounter += 1;
@@ -587,14 +595,8 @@ namespace bfk
 
                                     }
                                 }
-                                using (FileStream fs = File.Create(pathtoFile))
-                                {
-                                    using (StreamWriter decompressContent = new StreamWriter(fs))
-                                    {
-                                        decompressContent.Write(decompressedContent);
-                                    }
 
-                                }
+                                File.WriteAllText(pathtoFile, decompressedContent);
 
                                 Console.WriteLine("Inhalt wurde dekomprimiert");
                                 
