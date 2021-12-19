@@ -33,6 +33,7 @@ namespace bfk
             P,
             Q,
             R,
+            S,
             U,
             V,
             W,
@@ -262,8 +263,7 @@ namespace bfk
                         Console.WriteLine("Inhalt wurde zusammengefügt.");
                         break;
                     }
-                case "compress":
-                    
+                case "compress":                    
                     {
                         string textfile = "";
                         string pathToFile = "";
@@ -282,14 +282,16 @@ namespace bfk
                                 break;
                             }
 
+                            string compressedContent = "";
+
+
                             if (File.Exists(pathToFile))
                             {
                                 string contentOfFile = "";
                                 contentOfFile = File.ReadAllText(pathToFile);
-                                string compressedContent = "";
                                 string[] correctPositions = new string[contentOfFile.Length];
 
-                                for (int i = 0; i <= 26; i++)
+                                for (int i = 0; i <= 27; i++)
                                 {
                                     int counter = 0;
                                     int indexCounter = 0;
@@ -302,7 +304,6 @@ namespace bfk
 
                                         if (letter.ToString() == letterOfAlphabet)
                                         {
-
                                             counter += 1;
 
                                             if (indexCounter == contentOfFile.Length)
@@ -394,7 +395,7 @@ namespace bfk
                                 string contentOfFile = File.ReadAllText(pathToFile);
                                 string[] correctPositions = new string[contentOfFile.Length];
 
-                                for (int i = 0; i <= 26; i++)
+                                for (int i = 0; i <= 27; i++)
                                     {
                                         int counter = 0;
                                         int indexCounter = 0;
